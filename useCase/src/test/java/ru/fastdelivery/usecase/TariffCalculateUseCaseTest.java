@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import ru.fastdelivery.domain.common.currency.Currency;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
 import ru.fastdelivery.domain.common.price.Price;
+import ru.fastdelivery.domain.common.volume.Volume;
 import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
@@ -28,18 +29,25 @@ class TariffCalculateUseCaseTest {
     @Test
     @DisplayName("Расчет стоимости доставки -> успешно")
     void whenCalculatePrice_thenSuccess() {
+        // Mock dependencies
+        var weightPriceProvider = mock(WeightPriceProvider.class);
         var minimalPrice = new Price(BigDecimal.TEN, currency);
         var pricePerKg = new Price(BigDecimal.valueOf(100), currency);
-
         when(weightPriceProvider.minimalPrice()).thenReturn(minimalPrice);
         when(weightPriceProvider.costPerKg()).thenReturn(pricePerKg);
 
-        var shipment = new Shipment(List.of(new Pack(new Weight(BigInteger.valueOf(1200)))),
-                new CurrencyFactory(code -> true).create("RUB"));
+        // Create objects for test
+        var packs = List.of(new Pack(new Weight(BigInteger.valueOf(1200)),
+                new Volume(BigDecimal.valueOf(1501), BigDecimal.valueOf(150), BigDecimal.valueOf(150))));
+        var currency = new CurrencyFactory(code -> true).create("RUB");
+        var shipment = new Shipment(packs, currency);
         var expectedPrice = new Price(BigDecimal.valueOf(120), currency);
 
+        // Perform calculation
+        var tariffCalculateUseCase = new TariffCalculateUseCase(weightPriceProvider);
         var actualPrice = tariffCalculateUseCase.calc(shipment);
 
+        // Assert the result
         assertThat(actualPrice).usingRecursiveComparison()
                 .withComparatorForType(BigDecimalComparator.BIG_DECIMAL_COMPARATOR, BigDecimal.class)
                 .isEqualTo(expectedPrice);
