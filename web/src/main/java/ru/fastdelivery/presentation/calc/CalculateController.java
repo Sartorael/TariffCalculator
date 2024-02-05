@@ -47,7 +47,6 @@ public class CalculateController {
     })
     public CalculatePackagesResponse calculate(
             @Valid @RequestBody CalculatePackagesRequest request) {
-
         List<Pack> packs = new ArrayList<>();
     Departure departure = new Departure(tariffCalculateUseCaseLocation.getDepartureLatitude(),
             tariffCalculateUseCaseLocation.getDepartureLongitude());
@@ -59,10 +58,8 @@ public class CalculateController {
             Pack pack = new Pack(weight, volume,departure,destination);
             packs.add(pack);
         }
-
         var shipment = new Shipment(packs, currencyFactory.create(request.currencyCode()));
         var minimalPrice = tariffCalculateUseCase.minimalPrice();
-
         var totalPrice = tariffCalculateUseCase.calc(shipment).amount()
                 .add(tariffCalculateUseCaseVolume.calc(shipment).amount())
                 .add(tariffCalculateUseCaseLocation.calc(shipment).amount());
