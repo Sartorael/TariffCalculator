@@ -24,4 +24,5 @@ public class TariffCalculateUseCase {
     public Price minimalPrice() {
         return weightPriceProvider.minimalPrice();
     }
+
 }

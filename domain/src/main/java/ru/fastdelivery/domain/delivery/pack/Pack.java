@@ -2,6 +2,8 @@ package ru.fastdelivery.domain.delivery.pack;
 
 import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.common.volume.Volume;
+import ru.fastdelivery.domain.common.location.Departure;
+import ru.fastdelivery.domain.common.location.Destination;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
@@ -11,8 +13,10 @@ import java.math.BigInteger;
  *
  * @param weight вес товаров в упаковке
  * @param volume объем упаковки
+ * @param departure
+ * @param destination
  */
-public record Pack(Weight weight,Volume volume) {
+public record Pack(Weight weight,Volume volume, Departure departure, Destination destination) {
 
     private static final Weight maxWeight = new Weight(BigInteger.valueOf(150_000));
     private static final  int max = 1500;

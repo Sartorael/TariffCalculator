@@ -3,7 +3,10 @@ package ru.fastdelivery.presentation.api.request;
 import io.swagger.v3.oas.annotations.media.Schema;
 import jakarta.validation.constraints.NotEmpty;
 import jakarta.validation.constraints.NotNull;
+import lombok.Getter;
+import ru.fastdelivery.presentation.api.request.locationRequest.*;
 
+import java.math.BigDecimal;
 import java.util.List;
 
 @Schema(description = "Данные для расчета стоимости доставки")
@@ -16,6 +19,13 @@ public record CalculatePackagesRequest(
 
         @Schema(description = "Трехбуквенный код валюты", example = "RUB")
         @NotNull
-        String currencyCode
+        String currencyCode,
+
+        @Schema(description = "Координаты отправления")
+        DepartureReq departureReq,
+
+        @Schema(description = "Координаты назначения")
+        DestinationReq destinationReq
 ) {
+        // Геттеры или другие методы, если необходимо
 }

@@ -14,5 +14,6 @@ public record CargoPackage(
         BigDecimal width,
         @Schema(description = "Высота упаковки, мм", example = "200")
         BigDecimal height
+
 ) {
 }

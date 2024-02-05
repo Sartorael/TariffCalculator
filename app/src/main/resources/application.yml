@@ -6,3 +6,11 @@ cost:
     perKg: 400
     minimal: 350
     costPrVolume: 100
+    minimalDistance: 450
+location:
+  departure:
+    longitude: 50
+    latitude: 50
+  destination:
+    longitude: 60
+    latitude: 60

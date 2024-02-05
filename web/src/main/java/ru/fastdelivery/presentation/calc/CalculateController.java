@@ -11,6 +11,8 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
+import ru.fastdelivery.domain.common.location.Departure;
+import ru.fastdelivery.domain.common.location.Destination;;
 import ru.fastdelivery.domain.common.price.Price;
 import ru.fastdelivery.domain.common.volume.Volume;
 import ru.fastdelivery.domain.common.weight.Weight;
@@ -20,8 +22,10 @@ import ru.fastdelivery.presentation.api.request.CalculatePackagesRequest;
 import ru.fastdelivery.presentation.api.request.CargoPackage;
 import ru.fastdelivery.presentation.api.response.CalculatePackagesResponse;
 import ru.fastdelivery.usecase.TariffCalculateUseCase;
+import ru.fastdelivery.usecase.TariffCalculateUseCaseLocation;
 import ru.fastdelivery.usecase.TariffCalculateUseCaseVolume;
-
+import java.math.BigDecimal;
+import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -33,6 +37,7 @@ public class CalculateController {
     private final TariffCalculateUseCase tariffCalculateUseCase;
     private final CurrencyFactory currencyFactory;
     private final TariffCalculateUseCaseVolume tariffCalculateUseCaseVolume;
+    private final TariffCalculateUseCaseLocation tariffCalculateUseCaseLocation;
 
     @PostMapping
     @Operation(summary = "Расчет стоимости по упаковкам груза")
@@ -44,19 +49,26 @@ public class CalculateController {
             @Valid @RequestBody CalculatePackagesRequest request) {
 
         List<Pack> packs = new ArrayList<>();
+    Departure departure = new Departure(tariffCalculateUseCaseLocation.getDepartureLatitude(),
+            tariffCalculateUseCaseLocation.getDepartureLongitude());
+    Destination destination = new Destination(tariffCalculateUseCaseLocation.getDestinationLatitude(),
+            tariffCalculateUseCaseLocation.getDestinationLongitude());
         for (CargoPackage cargoPackage : request.packages()) {
             Weight weight = new Weight(cargoPackage.weight());
             Volume volume = new Volume(cargoPackage.length(), cargoPackage.width(), cargoPackage.height());
-            Pack pack = new Pack(weight, volume);
+            Pack pack = new Pack(weight, volume,departure,destination);
             packs.add(pack);
         }
 
         var shipment = new Shipment(packs, currencyFactory.create(request.currencyCode()));
         var minimalPrice = tariffCalculateUseCase.minimalPrice();
+
         var totalPrice = tariffCalculateUseCase.calc(shipment).amount()
-                .add(tariffCalculateUseCaseVolume.calc(shipment).amount());
+                .add(tariffCalculateUseCaseVolume.calc(shipment).amount())
+                .add(tariffCalculateUseCaseLocation.calc(shipment).amount());
+        totalPrice = totalPrice.setScale(2, RoundingMode.CEILING);
         var calculatedPriceResponse = new Price(totalPrice, minimalPrice.currency());
-        return new CalculatePackagesResponse(calculatedPriceResponse, minimalPrice);
+        return new CalculatePackagesResponse(calculatedPriceResponse, minimalPrice, departure, destination);
     }
 }
 

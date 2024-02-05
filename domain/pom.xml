@@ -43,6 +43,12 @@
             <groupId>org.mockito</groupId>
             <artifactId>mockito-core</artifactId>
         </dependency>
+        <dependency>
+            <groupId>com.github.grumlimited</groupId>
+            <artifactId>geocalc</artifactId>
+            <version>0.6</version>
+            <scope>compile</scope>
+        </dependency>
 
     </dependencies>
 
