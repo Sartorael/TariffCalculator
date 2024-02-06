@@ -30,12 +30,9 @@ class CalculatePackagesResponseTest {
         var usd = new CurrencyFactory(code -> true).create("USD");
         var calculatedPrice = new Price(new BigDecimal(100), usd);
         var minimalPrice = new Price(new BigDecimal(5), usd);
-
         var expected = new CalculatePackagesResponse(
                 new BigDecimal(100), new BigDecimal(5), usd.getCode());
-
         var actual = new CalculatePackagesResponse(calculatedPrice, minimalPrice);
-
         assertThat(actual).usingRecursiveComparison()
                 .withComparatorForType(BigDecimalComparator.BIG_DECIMAL_COMPARATOR, BigDecimal.class)
                 .isEqualTo(expected);

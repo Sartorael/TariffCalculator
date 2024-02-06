@@ -1,16 +1,16 @@
 package ru.fastdelivery.domain.delivery.pack;
 
-import org.junit.jupiter.api.Test;
-import ru.fastdelivery.domain.common.location.Departure;
-import ru.fastdelivery.domain.common.location.Destination;
-import ru.fastdelivery.domain.common.weight.Weight;
-import ru.fastdelivery.domain.common.volume.Volume;
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 import java.math.BigDecimal;
 import java.math.BigInteger;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
+import org.junit.jupiter.api.Test;
+import ru.fastdelivery.domain.common.location.Departure;
+import ru.fastdelivery.domain.common.location.Destination;
+import ru.fastdelivery.domain.common.volume.Volume;
+import ru.fastdelivery.domain.common.weight.Weight;
 
 class PackTest {
 
@@ -32,49 +32,54 @@ class PackTest {
     }
     @Test
     void whenVolumeMoreThanMaxVolume_thenThrowException() {
-        var volume = new Volume(
-                BigDecimal.valueOf(1501), BigDecimal.valueOf(150), BigDecimal.valueOf(150)
-        );
-        var weight = new Weight(BigInteger.valueOf(1_000));
-        var departure = new Departure(BigDecimal.ZERO,BigDecimal.ZERO);
-        var destination = new Destination(BigDecimal.ZERO,BigDecimal.ZERO);
-        assertThatThrownBy(() -> new Pack(weight, volume, departure, destination))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThrows(IllegalArgumentException.class, () -> {
+            var volume = new Volume(
+                    BigDecimal.valueOf(1501), BigDecimal.valueOf(150), BigDecimal.valueOf(150)
+            );
+            var weight = new Weight(BigInteger.valueOf(1_000));
+            var departure = new Departure(BigDecimal.ZERO, BigDecimal.ZERO);
+            var destination = new Destination(BigDecimal.ZERO, BigDecimal.ZERO);
+            new Pack(weight, volume, departure, destination);
+        });
     }
+
 
     @Test
     void whenWidthMoreThanMaxVolume_thenThrowException() {
-        var volume = new Volume(
-                BigDecimal.valueOf(1600), BigDecimal.valueOf(150), BigDecimal.valueOf(150)
-        );
-        var weight = new Weight(BigInteger.valueOf(1_000));
-        var departure = new Departure(BigDecimal.ZERO,BigDecimal.ZERO);
-        var destination = new Destination(BigDecimal.ZERO,BigDecimal.ZERO);
-        assertThatThrownBy(() -> new Pack(weight, volume, departure, destination))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThrows(IllegalArgumentException.class, () -> {
+            var volume = new Volume(
+                    BigDecimal.valueOf(1600), BigDecimal.valueOf(150), BigDecimal.valueOf(150)
+            );
+            var weight = new Weight(BigInteger.valueOf(1_000));
+            var departure = new Departure(BigDecimal.ZERO, BigDecimal.ZERO);
+            var destination = new Destination(BigDecimal.ZERO, BigDecimal.ZERO);
+            new Pack(weight, volume, departure, destination);
+        });
     }
 
     @Test
     void whenLengthMoreThanMaxVolume_thenThrowException() {
-        var volume = new Volume(
-                BigDecimal.valueOf(0), BigDecimal.valueOf(1501), BigDecimal.valueOf(150)
-        );
-        var weight = new Weight(BigInteger.valueOf(1_000));
-        var departure = new Departure(BigDecimal.ZERO,BigDecimal.ZERO);
-        var destination = new Destination(BigDecimal.ZERO,BigDecimal.ZERO);
-        assertThatThrownBy(() -> new Pack(weight, volume, departure, destination))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> {
+            var volume = new Volume(
+                    BigDecimal.valueOf(0), BigDecimal.valueOf(1501), BigDecimal.valueOf(150)
+            );
+            var weight = new Weight(BigInteger.valueOf(1_000));
+            var departure = new Departure(BigDecimal.ZERO, BigDecimal.ZERO);
+            var destination = new Destination(BigDecimal.ZERO, BigDecimal.ZERO);
+            new Pack(weight, volume, departure, destination);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 
     @Test
     void whenHeightMoreThanMaxVolume_thenThrowException() {
-        var volume = new Volume(
-                BigDecimal.valueOf(0), BigDecimal.valueOf(0), BigDecimal.valueOf(1501)
-        );
-        var weight = new Weight(BigInteger.valueOf(1_000));
-        var departure = new Departure(BigDecimal.ZERO,BigDecimal.ZERO);
-        var destination = new Destination(BigDecimal.ZERO,BigDecimal.ZERO);
-        assertThatThrownBy(() -> new Pack(weight, volume, departure, destination))
-                .isInstanceOf(IllegalArgumentException.class);
+        assertThatThrownBy(() -> {
+            var volume = new Volume(
+                    BigDecimal.valueOf(0), BigDecimal.valueOf(0), BigDecimal.valueOf(1501)
+            );
+            var weight = new Weight(BigInteger.valueOf(1_000));
+            var departure = new Departure(BigDecimal.ZERO, BigDecimal.ZERO);
+            var destination = new Destination(BigDecimal.ZERO, BigDecimal.ZERO);
+            new Pack(weight, volume, departure, destination);
+        }).isInstanceOf(IllegalArgumentException.class);
     }
 }
