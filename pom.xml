@@ -124,6 +124,11 @@
                 <version>${spring-boot.version}</version>
                 <scope>test</scope>
             </dependency>
+            <dependency>
+                <groupId>org.jacoco</groupId>
+                <artifactId>jacoco-maven-plugin</artifactId>
+                <version>0.8.5</version>
+            </dependency>
             <!--            3rdPart-->
             <dependency>
                 <groupId>org.projectlombok</groupId>

@@ -4,6 +4,8 @@ import com.grum.geocalc.Coordinate;
 import com.grum.geocalc.EarthCalc;
 import com.grum.geocalc.Point;
 import jakarta.annotation.PostConstruct;
+import jakarta.validation.constraints.Max;
+import jakarta.validation.constraints.Min;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -47,15 +49,23 @@ public class PricesRublesProperties implements WeightPriceProvider, VolumePriceP
     }
 
     @Value("${location.departure.latitude}")
+    @Min(45)
+    @Max(65)
     private String departureLatitudeStr;
 
     @Value("${location.departure.longitude}")
+    @Min(45)
+    @Max(65)
     private String departureLongitudeStr;
 
     @Value("${location.destination.latitude}")
+    @Min(45)
+    @Max(65)
     private String destinationLatitudeStr;
 
     @Value("${location.destination.longitude}")
+    @Min(45)
+    @Max(65)
     private String destinationLongitudeStr;
 
     private double departureLatitude;
