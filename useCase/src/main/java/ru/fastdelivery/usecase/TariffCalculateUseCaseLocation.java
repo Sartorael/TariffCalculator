@@ -1,14 +1,11 @@
 package ru.fastdelivery.usecase;
 
-import ru.fastdelivery.domain.common.price.Price;
-import ru.fastdelivery.domain.delivery.shipment.Shipment;
-import lombok.RequiredArgsConstructor;
-
-
-
-import javax.inject.Named;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
+import javax.inject.Named;
+import lombok.RequiredArgsConstructor;
+import ru.fastdelivery.domain.common.price.Price;
+import ru.fastdelivery.domain.delivery.shipment.Shipment;
 
 @Named
 @RequiredArgsConstructor

@@ -9,11 +9,11 @@ import javax.inject.Named;
 @Named
 @RequiredArgsConstructor
 public class TariffCalculateUseCaseVolume {
-    private final VolumePriceProvider volumePriceProvider;
+  private final VolumePriceProvider volumePriceProvider;
 
-    public Price calc(Shipment shipment){
-        var volumeAllPackagesV = shipment.volumeAllPackages().volumes();
-        var volumePrice = volumePriceProvider.costPerVolume().multiply(volumeAllPackagesV);
-        return volumePriceProvider.costPerVolume().multiply(volumeAllPackagesV).max(volumePrice);
-    }
+  public Price calc(Shipment shipment) {
+    var volumeAllPackagesV = shipment.volumeAllPackages().volumes();
+    var volumePrice = volumePriceProvider.costPerVolume().multiply(volumeAllPackagesV);
+    return volumePriceProvider.costPerVolume().multiply(volumeAllPackagesV).max(volumePrice);
+  }
 }

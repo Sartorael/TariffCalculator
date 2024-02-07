@@ -1,13 +1,12 @@
 package ru.fastdelivery.domain.common.price;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.assertj.core.api.Assertions.assertThatThrownBy;
+
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import ru.fastdelivery.domain.common.currency.Currency;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
-
-import java.math.BigDecimal;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.assertj.core.api.Assertions.assertThatThrownBy;
 
 class PriceTest {
 

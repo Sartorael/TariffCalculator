@@ -2,10 +2,9 @@ package ru.fastdelivery.properties.provider;
 
 import jakarta.validation.constraints.DecimalMax;
 import jakarta.validation.constraints.DecimalMin;
+import java.math.BigDecimal;
 import lombok.Setter;
 import org.springframework.boot.context.properties.ConfigurationProperties;
-
-import java.math.BigDecimal;
 
 @ConfigurationProperties("location.departure")
 @Setter

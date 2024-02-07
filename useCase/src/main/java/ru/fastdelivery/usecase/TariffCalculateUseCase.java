@@ -1,10 +1,9 @@
 package ru.fastdelivery.usecase;
 
+import javax.inject.Named;
 import lombok.RequiredArgsConstructor;
 import ru.fastdelivery.domain.common.price.Price;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
-
-import javax.inject.Named;
 
 @Named
 @RequiredArgsConstructor

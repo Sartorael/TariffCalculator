@@ -1,5 +1,12 @@
 package ru.fastdelivery.usecase;
 
+import static org.assertj.core.api.Assertions.assertThat;
+import static org.mockito.Mockito.mock;
+import static org.mockito.Mockito.when;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
 import org.assertj.core.util.BigDecimalComparator;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
@@ -12,14 +19,6 @@ import ru.fastdelivery.domain.common.volume.Volume;
 import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
-import static org.mockito.Mockito.mock;
-import static org.mockito.Mockito.when;
 
 class TariffCalculateUseCaseTest {
 

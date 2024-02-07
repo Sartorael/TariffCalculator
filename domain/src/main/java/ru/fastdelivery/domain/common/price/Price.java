@@ -1,8 +1,7 @@
 package ru.fastdelivery.domain.common.price;
 
-import ru.fastdelivery.domain.common.currency.Currency;
-
 import java.math.BigDecimal;
+import ru.fastdelivery.domain.common.currency.Currency;
 
 /**
  * @param amount   значение цены

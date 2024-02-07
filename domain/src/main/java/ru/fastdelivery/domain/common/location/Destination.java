@@ -9,18 +9,14 @@ import java.math.BigDecimal;
  * @param longitude Долгота
  */
 public record Destination(BigDecimal latitude, BigDecimal longitude) {
-    @Override
-    public BigDecimal latitude() {
-        return latitude;
-    }
+  @Override
+  public BigDecimal latitude() {
+    return latitude;
+  }
 
-    @Override
-    public BigDecimal longitude() {
-        return longitude;
-    }
-    public Destination add(Destination destination) {
-        BigDecimal newLatitude = this.latitude.add(destination.latitude);
-        BigDecimal newLongitude = this.longitude.add(destination.longitude);
-        return new Destination(newLatitude, newLongitude);
-    }
+  @Override
+  public BigDecimal longitude() {
+    return longitude;
+  }
+
 }

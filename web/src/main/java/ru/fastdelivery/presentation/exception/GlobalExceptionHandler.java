@@ -7,10 +7,9 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 @ControllerAdvice
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(IllegalArgumentException.class)
-    public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException e) {
-        ApiError apiError = ApiError.badRequest(e.getMessage());
-        return new ResponseEntity<>(apiError, apiError.httpStatus());
-    }
+  @ExceptionHandler(IllegalArgumentException.class)
+  public ResponseEntity<ApiError> handleIllegalArgument(IllegalArgumentException e) {
+    ApiError apiError = ApiError.badRequest(e.getMessage());
+    return new ResponseEntity<>(apiError, apiError.httpStatus());
+  }
 }
-

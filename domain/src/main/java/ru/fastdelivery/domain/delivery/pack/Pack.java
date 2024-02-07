@@ -1,12 +1,11 @@
 package ru.fastdelivery.domain.delivery.pack;
 
-import ru.fastdelivery.domain.common.weight.Weight;
-import ru.fastdelivery.domain.common.volume.Volume;
-import ru.fastdelivery.domain.common.location.Departure;
-import ru.fastdelivery.domain.common.location.Destination;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
+import ru.fastdelivery.domain.common.location.Departure;
+import ru.fastdelivery.domain.common.location.Destination;
+import ru.fastdelivery.domain.common.volume.Volume;
+import ru.fastdelivery.domain.common.weight.Weight;
 
 /**
  * Упаковка груза

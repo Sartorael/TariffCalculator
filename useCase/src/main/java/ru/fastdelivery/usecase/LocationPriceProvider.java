@@ -1,8 +1,7 @@
 package ru.fastdelivery.usecase;
 
-import ru.fastdelivery.domain.common.price.Price;
-
 import java.math.BigDecimal;
+import ru.fastdelivery.domain.common.price.Price;
 
 public interface LocationPriceProvider {
 

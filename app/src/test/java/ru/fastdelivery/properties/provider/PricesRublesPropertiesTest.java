@@ -1,13 +1,12 @@
 package ru.fastdelivery.properties.provider;
 
+import static org.junit.jupiter.api.Assertions.*;
+
+import java.math.BigDecimal;
 import org.junit.jupiter.api.Test;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
 import ru.fastdelivery.domain.common.price.Price;
 
-
-import java.math.BigDecimal;
-
-import static org.junit.jupiter.api.Assertions.*;
 class PricesRublesPropertiesTest {
     PricesRublesProperties properties;
     CurrencyFactory currencyFactory;

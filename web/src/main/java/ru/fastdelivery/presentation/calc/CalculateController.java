@@ -1,5 +1,8 @@
 package ru.fastdelivery.presentation.calc;
 
+import com.fasterxml.jackson.core.JsonProcessingException;
+import com.fasterxml.jackson.databind.ObjectMapper;
+import com.fasterxml.jackson.databind.SerializationFeature;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
@@ -9,6 +12,9 @@ import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.MediaType;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -44,8 +50,13 @@ public class CalculateController {
         @ApiResponse(responseCode = "200", description = "Successful operation"),
         @ApiResponse(responseCode = "400", description = "Invalid input provided")
     })
-    public CalculatePackagesResponse calculate(
-            @Valid @RequestBody CalculatePackagesRequest request) {
+    public ResponseEntity<String> calculate(
+            @Valid @RequestBody CalculatePackagesRequest request) throws JsonProcessingException {
+            if (request.packages() == null) {
+                return ResponseEntity
+                        .badRequest()
+                        .build();
+            }
         List<Pack> packs = new ArrayList<>();
     Departure departure = new Departure(tariffCalculateUseCaseLocation.getDepartureLatitude(),
             tariffCalculateUseCaseLocation.getDepartureLongitude());
@@ -63,8 +74,19 @@ public class CalculateController {
                 .add(tariffCalculateUseCaseVolume.calc(shipment).amount())
                 .add(tariffCalculateUseCaseLocation.calc(shipment).amount());
         totalPrice = totalPrice.setScale(2, RoundingMode.CEILING);
+        ObjectMapper objectMapper = new ObjectMapper();
+        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+        HttpHeaders headers = new HttpHeaders();
+        headers.setContentType(MediaType.APPLICATION_JSON);
         var calculatedPriceResponse = new Price(totalPrice, minimalPrice.currency());
-        return new CalculatePackagesResponse(calculatedPriceResponse, minimalPrice, departure, destination);
-    }
+        String responseBody = objectMapper.writeValueAsString(new CalculatePackagesResponse(
+                    calculatedPriceResponse, minimalPrice, departure, destination));
+
+
+        return ResponseEntity.ok()
+                .headers(headers)
+                .body(responseBody);
+
+        }
 }
 

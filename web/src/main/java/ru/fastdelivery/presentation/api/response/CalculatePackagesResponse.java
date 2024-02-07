@@ -1,9 +1,8 @@
 package ru.fastdelivery.presentation.api.response;
 
-import ru.fastdelivery.domain.common.price.Price;
-import ru.fastdelivery.domain.common.location.*;
-
 import java.math.BigDecimal;
+import ru.fastdelivery.domain.common.location.*;
+import ru.fastdelivery.domain.common.price.Price;
 
 public record CalculatePackagesResponse(
         BigDecimal totalPrice,

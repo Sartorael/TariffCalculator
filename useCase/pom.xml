@@ -20,10 +20,6 @@
     </repositories>
 
 
-
-
-
-
     <properties>
         <maven.compiler.source>17</maven.compiler.source>
         <maven.compiler.target>17</maven.compiler.target>
@@ -49,7 +45,7 @@
             <artifactId>javax.inject</artifactId>
             <version>1</version>
         </dependency>
-<!--       Test -->
+        <!--       Test -->
         <dependency>
             <groupId>org.junit.jupiter</groupId>
             <artifactId>junit-jupiter-api</artifactId>

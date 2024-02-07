@@ -6,6 +6,7 @@ import com.grum.geocalc.Point;
 import jakarta.annotation.PostConstruct;
 import jakarta.validation.constraints.Max;
 import jakarta.validation.constraints.Min;
+import java.math.BigDecimal;
 import lombok.Setter;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
@@ -15,8 +16,6 @@ import ru.fastdelivery.domain.common.price.Price;
 import ru.fastdelivery.usecase.LocationPriceProvider;
 import ru.fastdelivery.usecase.VolumePriceProvider;
 import ru.fastdelivery.usecase.WeightPriceProvider;
-
-import java.math.BigDecimal;
 
 /**
  * Настройки базовых цен стоимости перевозки из конфига

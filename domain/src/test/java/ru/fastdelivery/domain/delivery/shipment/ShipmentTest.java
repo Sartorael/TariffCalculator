@@ -1,5 +1,10 @@
 package ru.fastdelivery.domain.delivery.shipment;
 
+import static org.assertj.core.api.Assertions.assertThat;
+
+import java.math.BigDecimal;
+import java.math.BigInteger;
+import java.util.List;
 import org.junit.jupiter.api.Test;
 import ru.fastdelivery.domain.common.currency.CurrencyFactory;
 import ru.fastdelivery.domain.common.location.Departure;
@@ -7,12 +12,6 @@ import ru.fastdelivery.domain.common.location.Destination;
 import ru.fastdelivery.domain.common.volume.Volume;
 import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
-
-import java.math.BigDecimal;
-import java.math.BigInteger;
-import java.util.List;
-
-import static org.assertj.core.api.Assertions.assertThat;
 
 class ShipmentTest {
 
