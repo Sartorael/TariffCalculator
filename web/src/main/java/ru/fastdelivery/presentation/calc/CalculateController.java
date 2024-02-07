@@ -39,54 +39,58 @@ import ru.fastdelivery.usecase.TariffCalculateUseCaseVolume;
 @RequiredArgsConstructor
 @Tag(name = "Расчеты стоимости доставки")
 public class CalculateController {
-    private final TariffCalculateUseCase tariffCalculateUseCase;
-    private final CurrencyFactory currencyFactory;
-    private final TariffCalculateUseCaseVolume tariffCalculateUseCaseVolume;
-    private final TariffCalculateUseCaseLocation tariffCalculateUseCaseLocation;
+  private final TariffCalculateUseCase tariffCalculateUseCase;
+  private final CurrencyFactory currencyFactory;
+  private final TariffCalculateUseCaseVolume tariffCalculateUseCaseVolume;
+  private final TariffCalculateUseCaseLocation tariffCalculateUseCaseLocation;
 
-    @PostMapping
-    @Operation(summary = "Расчет стоимости по упаковкам груза")
-    @ApiResponses(value = {
+  @PostMapping
+  @Operation(summary = "Расчет стоимости по упаковкам груза")
+  @ApiResponses(
+      value = {
         @ApiResponse(responseCode = "200", description = "Successful operation"),
         @ApiResponse(responseCode = "400", description = "Invalid input provided")
-    })
-    public ResponseEntity<String> calculate(
-            @Valid @RequestBody CalculatePackagesRequest request) throws JsonProcessingException {
-            if (request.packages() == null) {
-                return ResponseEntity
-                        .badRequest()
-                        .build();
-            }
-        List<Pack> packs = new ArrayList<>();
-    Departure departure = new Departure(tariffCalculateUseCaseLocation.getDepartureLatitude(),
+      })
+  public ResponseEntity<String> calculate(@Valid @RequestBody CalculatePackagesRequest request)
+      throws JsonProcessingException {
+    if (request.packages() == null) {
+      return ResponseEntity.badRequest().build();
+    }
+    List<Pack> packs = new ArrayList<>();
+    Departure departure =
+        new Departure(
+            tariffCalculateUseCaseLocation.getDepartureLatitude(),
             tariffCalculateUseCaseLocation.getDepartureLongitude());
-    Destination destination = new Destination(tariffCalculateUseCaseLocation.getDestinationLatitude(),
+    Destination destination =
+        new Destination(
+            tariffCalculateUseCaseLocation.getDestinationLatitude(),
             tariffCalculateUseCaseLocation.getDestinationLongitude());
-        for (CargoPackage cargoPackage : request.packages()) {
-            Weight weight = new Weight(cargoPackage.weight());
-            Volume volume = new Volume(cargoPackage.length(), cargoPackage.width(), cargoPackage.height());
-            Pack pack = new Pack(weight, volume,departure,destination);
-            packs.add(pack);
-        }
-        var shipment = new Shipment(packs, currencyFactory.create(request.currencyCode()));
-        var minimalPrice = tariffCalculateUseCase.minimalPrice();
-        var totalPrice = tariffCalculateUseCase.calc(shipment).amount()
-                .add(tariffCalculateUseCaseVolume.calc(shipment).amount())
-                .add(tariffCalculateUseCaseLocation.calc(shipment).amount());
-        totalPrice = totalPrice.setScale(2, RoundingMode.CEILING);
-        ObjectMapper objectMapper = new ObjectMapper();
-        objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-        HttpHeaders headers = new HttpHeaders();
-        headers.setContentType(MediaType.APPLICATION_JSON);
-        var calculatedPriceResponse = new Price(totalPrice, minimalPrice.currency());
-        String responseBody = objectMapper.writeValueAsString(new CalculatePackagesResponse(
-                    calculatedPriceResponse, minimalPrice, departure, destination));
+    for (CargoPackage cargoPackage : request.packages()) {
+      Weight weight = new Weight(cargoPackage.weight());
+      Volume volume =
+          new Volume(cargoPackage.length(), cargoPackage.width(), cargoPackage.height());
+      Pack pack = new Pack(weight, volume, departure, destination);
+      packs.add(pack);
+    }
+    var shipment = new Shipment(packs, currencyFactory.create(request.currencyCode()));
+    var minimalPrice = tariffCalculateUseCase.minimalPrice();
+    var totalPrice =
+        tariffCalculateUseCase
+            .calc(shipment)
+            .amount()
+            .add(tariffCalculateUseCaseVolume.calc(shipment).amount())
+            .add(tariffCalculateUseCaseLocation.calc(shipment).amount());
+    totalPrice = totalPrice.setScale(2, RoundingMode.CEILING);
+    ObjectMapper objectMapper = new ObjectMapper();
+    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
+    HttpHeaders headers = new HttpHeaders();
+    headers.setContentType(MediaType.APPLICATION_JSON);
+    var calculatedPriceResponse = new Price(totalPrice, minimalPrice.currency());
+    String responseBody =
+        objectMapper.writeValueAsString(
+            new CalculatePackagesResponse(
+                calculatedPriceResponse, minimalPrice, departure, destination));
 
-
-        return ResponseEntity.ok()
-                .headers(headers)
-                .body(responseBody);
-
-        }
+    return ResponseEntity.ok().headers(headers).body(responseBody);
+  }
 }
-

@@ -10,45 +10,43 @@ import ru.fastdelivery.domain.common.currency.CurrencyFactory;
 
 class PriceTest {
 
-    final Currency currency = new CurrencyFactory(code -> true).create("RUB");
+  final Currency currency = new CurrencyFactory(code -> true).create("RUB");
 
+  @Test
+  void whenAmountBelowZero_thenException() {
+    var amount = BigDecimal.valueOf(-1);
+    assertThatThrownBy(() -> new Price(amount, currency))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
 
-    @Test
-    void whenAmountBelowZero_thenException() {
-        var amount = BigDecimal.valueOf(-1);
-        assertThatThrownBy(() -> new Price(amount, currency))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
+  @Test
+  void multiply() {
+    var price = new Price(BigDecimal.valueOf(10), currency);
+    var pieces = new BigDecimal("2.54");
+    var expected = new Price(BigDecimal.valueOf(25.4), currency);
 
-    @Test
-    void multiply() {
-        var price = new Price(BigDecimal.valueOf(10), currency);
-        var pieces = new BigDecimal("2.54");
-        var expected = new Price(BigDecimal.valueOf(25.4), currency);
+    var actualPrice = price.multiply(pieces);
 
-        var actualPrice = price.multiply(pieces);
+    assertThat(actualPrice.amount()).isEqualByComparingTo(expected.amount());
+    assertThat(actualPrice.currency()).isEqualTo(expected.currency());
+  }
 
-        assertThat(actualPrice.amount()).isEqualByComparingTo(expected.amount());
-        assertThat(actualPrice.currency()).isEqualTo(expected.currency());
-    }
+  @Test
+  void max() {
+    var price = new Price(BigDecimal.valueOf(10), currency);
+    var moreThanPrice = new Price(BigDecimal.valueOf(100), currency);
 
-    @Test
-    void max() {
-        var price = new Price(BigDecimal.valueOf(10), currency);
-        var moreThanPrice = new Price(BigDecimal.valueOf(100), currency);
+    var actualMax = price.max(moreThanPrice);
 
-        var actualMax = price.max(moreThanPrice);
+    assertThat(actualMax).isEqualTo(moreThanPrice);
+  }
 
-        assertThat(actualMax).isEqualTo(moreThanPrice);
-    }
+  @Test
+  void maxWithDifferentCurrency_thenException() {
+    var price = new Price(BigDecimal.valueOf(10), currency);
+    var moreThanPrice =
+        new Price(BigDecimal.valueOf(100), new CurrencyFactory(code -> true).create("USD"));
 
-    @Test
-    void maxWithDifferentCurrency_thenException() {
-        var price = new Price(BigDecimal.valueOf(10), currency);
-        var moreThanPrice = new Price(BigDecimal.valueOf(100),
-                new CurrencyFactory(code -> true).create("USD"));
-
-        assertThatThrownBy(() -> price.max(moreThanPrice))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
+    assertThatThrownBy(() -> price.max(moreThanPrice)).isInstanceOf(IllegalArgumentException.class);
+  }
 }

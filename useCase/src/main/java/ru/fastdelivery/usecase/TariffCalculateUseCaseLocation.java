@@ -10,7 +10,7 @@ import ru.fastdelivery.domain.delivery.shipment.Shipment;
 @Named
 @RequiredArgsConstructor
 public class TariffCalculateUseCaseLocation {
-    private final LocationPriceProvider locationPriceProvider;
+  private final LocationPriceProvider locationPriceProvider;
 
   public Price calc(Shipment shipment) {
     BigDecimal priceEveryMinDistance =
@@ -19,29 +19,38 @@ public class TariffCalculateUseCaseLocation {
     if (locationPriceProvider.distanceCalc().compareTo(getMinimalDistance()) < 0) {
       return locationPriceProvider.costPerKm().multiply(BigDecimal.ZERO);
     } else {
-        return locationPriceProvider.costPerKm().multiply(priceEveryMinDistance).multiply(minimalPrice.amount());
+      return locationPriceProvider
+          .costPerKm()
+          .multiply(priceEveryMinDistance)
+          .multiply(minimalPrice.amount());
     }
-        }
-    public Price minimalPrice(){
-        return locationPriceProvider.minimalPrice();
-    }
-    public BigDecimal distanceCalc(){
-        return locationPriceProvider.distanceCalc();
-    }
-    public  BigDecimal getDepartureLatitude(){
-        return locationPriceProvider.getDepartureLatitude();
-    }
-    public BigDecimal getDepartureLongitude(){
-        return locationPriceProvider.getDepartureLongitude();
-    }
-    public BigDecimal getDestinationLatitude(){
-        return locationPriceProvider.getDestinationLatitude();
-    }
-    public BigDecimal getDestinationLongitude(){
-        return locationPriceProvider.getDestinationLongitude();
-    }
-    public BigDecimal getMinimalDistance(){
-        return locationPriceProvider.getMinimalDistance();
-    }
-}
+  }
 
+  public Price minimalPrice() {
+    return locationPriceProvider.minimalPrice();
+  }
+
+  public BigDecimal distanceCalc() {
+    return locationPriceProvider.distanceCalc();
+  }
+
+  public BigDecimal getDepartureLatitude() {
+    return locationPriceProvider.getDepartureLatitude();
+  }
+
+  public BigDecimal getDepartureLongitude() {
+    return locationPriceProvider.getDepartureLongitude();
+  }
+
+  public BigDecimal getDestinationLatitude() {
+    return locationPriceProvider.getDestinationLatitude();
+  }
+
+  public BigDecimal getDestinationLongitude() {
+    return locationPriceProvider.getDestinationLongitude();
+  }
+
+  public BigDecimal getMinimalDistance() {
+    return locationPriceProvider.getMinimalDistance();
+  }
+}

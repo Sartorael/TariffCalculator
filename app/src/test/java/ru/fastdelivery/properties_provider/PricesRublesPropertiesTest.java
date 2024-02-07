@@ -14,41 +14,41 @@ import ru.fastdelivery.properties.provider.PricesRublesProperties;
 
 class PricesRublesPropertiesTest {
 
-    public static final BigDecimal PER_KG = BigDecimal.valueOf(50);
-    public static final BigDecimal MINIMAL = BigDecimal.valueOf(100);
-    public static final String RUB = "RUB";
-    final CurrencyFactory currencyFactory = mock(CurrencyFactory.class);
-    PricesRublesProperties properties;
+  public static final BigDecimal PER_KG = BigDecimal.valueOf(50);
+  public static final BigDecimal MINIMAL = BigDecimal.valueOf(100);
+  public static final String RUB = "RUB";
+  final CurrencyFactory currencyFactory = mock(CurrencyFactory.class);
+  PricesRublesProperties properties;
 
-    @BeforeEach
-    void init(){
-        properties = new PricesRublesProperties();
-        properties.setCurrencyFactory(currencyFactory);
+  @BeforeEach
+  void init() {
+    properties = new PricesRublesProperties();
+    properties.setCurrencyFactory(currencyFactory);
 
-        properties.setPerKg(PER_KG);
-        properties.setMinimal(MINIMAL);
+    properties.setPerKg(PER_KG);
+    properties.setMinimal(MINIMAL);
 
-        var currency = mock(Currency.class);
-        when(currency.getCode()).thenReturn(RUB);
+    var currency = mock(Currency.class);
+    when(currency.getCode()).thenReturn(RUB);
 
-        when(currencyFactory.create(RUB)).thenReturn(currency);
-    }
+    when(currencyFactory.create(RUB)).thenReturn(currency);
+  }
 
-    @Test
-    void whenCallPricePerKg_thenRequestFromConfig() {
-        var actual = properties.costPerKg();
+  @Test
+  void whenCallPricePerKg_thenRequestFromConfig() {
+    var actual = properties.costPerKg();
 
-        verify(currencyFactory).create("RUB");
-        assertThat(actual.amount()).isEqualByComparingTo(PER_KG);
-        assertThat(actual.currency().getCode()).isEqualTo("RUB");
-    }
+    verify(currencyFactory).create("RUB");
+    assertThat(actual.amount()).isEqualByComparingTo(PER_KG);
+    assertThat(actual.currency().getCode()).isEqualTo("RUB");
+  }
 
-    @Test
-    void whenCallMinimalPrice_thenRequestFromConfig() {
-        var actual = properties.minimalPrice();
+  @Test
+  void whenCallMinimalPrice_thenRequestFromConfig() {
+    var actual = properties.minimalPrice();
 
-        verify(currencyFactory).create("RUB");
-        assertThat(actual.amount()).isEqualByComparingTo(MINIMAL);
-        assertThat(actual.currency().getCode()).isEqualTo("RUB");
-    }
+    verify(currencyFactory).create("RUB");
+    assertThat(actual.amount()).isEqualByComparingTo(MINIMAL);
+    assertThat(actual.currency().getCode()).isEqualTo("RUB");
+  }
 }

@@ -18,5 +18,4 @@ public record Departure(BigDecimal latitude, BigDecimal longitude) {
   public BigDecimal longitude() {
     return longitude;
   }
-
 }

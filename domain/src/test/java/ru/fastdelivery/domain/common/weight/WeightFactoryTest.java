@@ -11,20 +11,20 @@ import org.junit.jupiter.params.provider.ValueSource;
 
 class WeightFactoryTest {
 
-    @ParameterizedTest(name = "Граммы = {arguments} -> объект создан")
-    @ValueSource(longs = { 0, 1, 100, 10_000 })
-    void whenGramsGreaterThanZero_thenObjectCreated(long amount) {
-        var weight = new Weight(BigInteger.valueOf(amount));
+  @ParameterizedTest(name = "Граммы = {arguments} -> объект создан")
+  @ValueSource(longs = {0, 1, 100, 10_000})
+  void whenGramsGreaterThanZero_thenObjectCreated(long amount) {
+    var weight = new Weight(BigInteger.valueOf(amount));
 
-        assertNotNull(weight);
-        assertThat(weight.weightGrams()).isEqualByComparingTo(BigInteger.valueOf(amount));
-    }
+    assertNotNull(weight);
+    assertThat(weight.weightGrams()).isEqualByComparingTo(BigInteger.valueOf(amount));
+  }
 
-    @ParameterizedTest(name = "Стоимость = {arguments} -> исключение")
-    @ValueSource(longs = { -1, -100, -10_000 })
-    @DisplayName("Значение стоимости ниже 0.00 -> исключение")
-    void whenGramsLessThanZero_thenThrowException(long amount) {
-        assertThatThrownBy(() -> new Weight(BigInteger.valueOf(amount)))
-                .isInstanceOf(IllegalArgumentException.class);
-    }
+  @ParameterizedTest(name = "Стоимость = {arguments} -> исключение")
+  @ValueSource(longs = {-1, -100, -10_000})
+  @DisplayName("Значение стоимости ниже 0.00 -> исключение")
+  void whenGramsLessThanZero_thenThrowException(long amount) {
+    assertThatThrownBy(() -> new Weight(BigInteger.valueOf(amount)))
+        .isInstanceOf(IllegalArgumentException.class);
+  }
 }

@@ -10,24 +10,24 @@ import ru.fastdelivery.properties.provider.CurrencyProperties;
 
 class CurrencyPropertiesTest {
 
-    @Test
-    @DisplayName("Если код валюты в списке -> true")
-    void whenCodeInList_thanIsAvailableCurrencyCodeReturnTrue() {
-        CurrencyProperties properties = new CurrencyProperties();
-        properties.setAvailable(List.of("USD", "EUR"));
+  @Test
+  @DisplayName("Если код валюты в списке -> true")
+  void whenCodeInList_thanIsAvailableCurrencyCodeReturnTrue() {
+    CurrencyProperties properties = new CurrencyProperties();
+    properties.setAvailable(List.of("USD", "EUR"));
 
-        assertTrue(properties.isAvailable("USD"));
-        assertTrue(properties.isAvailable("EUR"));
-        assertFalse(properties.isAvailable("RUB"));
-    }
+    assertTrue(properties.isAvailable("USD"));
+    assertTrue(properties.isAvailable("EUR"));
+    assertFalse(properties.isAvailable("RUB"));
+  }
 
-    @Test
-    @DisplayName("Если код валюты НЕ в списке -> false")
-    void whenCodeIsNotInList_thanIsAvailableCurrencyCodeReturnFalse() {
-        CurrencyProperties properties = new CurrencyProperties();
-        properties.setAvailable(List.of("USD", "EUR"));
+  @Test
+  @DisplayName("Если код валюты НЕ в списке -> false")
+  void whenCodeIsNotInList_thanIsAvailableCurrencyCodeReturnFalse() {
+    CurrencyProperties properties = new CurrencyProperties();
+    properties.setAvailable(List.of("USD", "EUR"));
 
-        assertFalse(properties.isAvailable("RUB"));
-        assertFalse(properties.isAvailable("BYN"));
-    }
+    assertFalse(properties.isAvailable("RUB"));
+    assertFalse(properties.isAvailable("BYN"));
+  }
 }

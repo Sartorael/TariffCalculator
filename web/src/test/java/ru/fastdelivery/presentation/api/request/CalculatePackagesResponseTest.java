@@ -15,31 +15,46 @@ import ru.fastdelivery.presentation.api.response.CalculatePackagesResponse;
 
 class CalculatePackagesResponseTest {
 
-    @Test
-    @DisplayName("Если валюты разные -> ошибка создания объекта")
-    void whenCurrenciesAreNotEqual_thenException() {
-        var calculatedPrice = new Price(new BigDecimal(100), new CurrencyFactory(code -> true).create("USD"));
-        var minimalPrice = new Price(new BigDecimal(5), new CurrencyFactory(code -> true).create("RUB"));
+  @Test
+  @DisplayName("Если валюты разные -> ошибка создания объекта")
+  void whenCurrenciesAreNotEqual_thenException() {
+    var calculatedPrice =
+        new Price(new BigDecimal(100), new CurrencyFactory(code -> true).create("USD"));
+    var minimalPrice =
+        new Price(new BigDecimal(5), new CurrencyFactory(code -> true).create("RUB"));
 
-        assertThrows(IllegalArgumentException.class,
-                () -> new CalculatePackagesResponse(calculatedPrice, minimalPrice,
-                        new Departure(BigDecimal.ZERO,BigDecimal.ZERO), new Destination(BigDecimal.ZERO,BigDecimal.ZERO)));
-    }
+    assertThrows(
+        IllegalArgumentException.class,
+        () ->
+            new CalculatePackagesResponse(
+                calculatedPrice,
+                minimalPrice,
+                new Departure(BigDecimal.ZERO, BigDecimal.ZERO),
+                new Destination(BigDecimal.ZERO, BigDecimal.ZERO)));
+  }
 
-    @Test
-    @DisplayName("Если валюты одинаковые -> объект создан")
-    void whenCurrenciesAreEqual_thenObjectCreated() {
-        var usd = new CurrencyFactory(code -> true).create("USD");
-        var calculatedPrice = new Price(new BigDecimal(100), usd);
-        var minimalPrice = new Price(new BigDecimal(5), usd);
+  @Test
+  @DisplayName("Если валюты одинаковые -> объект создан")
+  void whenCurrenciesAreEqual_thenObjectCreated() {
+    var usd = new CurrencyFactory(code -> true).create("USD");
+    var calculatedPrice = new Price(new BigDecimal(100), usd);
+    var minimalPrice = new Price(new BigDecimal(5), usd);
     var expected =
         new CalculatePackagesResponse(
-            new BigDecimal(100), new BigDecimal(5), usd.getCode(), new Destination(BigDecimal
-                .ZERO,BigDecimal.ZERO),new Departure(BigDecimal.ZERO,BigDecimal.ZERO));
-        var actual = new CalculatePackagesResponse(calculatedPrice, minimalPrice, new Departure(BigDecimal.ZERO,BigDecimal.ZERO), new Destination(BigDecimal.ZERO,BigDecimal.ZERO) );
-        assertThat(actual).usingRecursiveComparison()
-                .withComparatorForType(BigDecimalComparator.BIG_DECIMAL_COMPARATOR, BigDecimal.class)
-                .isEqualTo(expected);
-    }
-
+            new BigDecimal(100),
+            new BigDecimal(5),
+            usd.getCode(),
+            new Destination(BigDecimal.ZERO, BigDecimal.ZERO),
+            new Departure(BigDecimal.ZERO, BigDecimal.ZERO));
+    var actual =
+        new CalculatePackagesResponse(
+            calculatedPrice,
+            minimalPrice,
+            new Departure(BigDecimal.ZERO, BigDecimal.ZERO),
+            new Destination(BigDecimal.ZERO, BigDecimal.ZERO));
+    assertThat(actual)
+        .usingRecursiveComparison()
+        .withComparatorForType(BigDecimalComparator.BIG_DECIMAL_COMPARATOR, BigDecimal.class)
+        .isEqualTo(expected);
+  }
 }

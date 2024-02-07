@@ -1,7 +1,6 @@
 package ru.fastdelivery.presentation.api.request;
 
 import io.swagger.v3.oas.annotations.media.Schema;
-
 import java.math.BigDecimal;
 import java.math.BigInteger;
 

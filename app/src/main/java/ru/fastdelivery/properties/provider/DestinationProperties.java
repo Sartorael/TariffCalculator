@@ -9,12 +9,11 @@ import org.springframework.boot.context.properties.ConfigurationProperties;
 @ConfigurationProperties("location.destination")
 @Setter
 public class DestinationProperties {
-   @DecimalMin("45")
-   @DecimalMax("65")
-   private BigDecimal latitude;
+  @DecimalMin("45")
+  @DecimalMax("65")
+  private BigDecimal latitude;
 
-   @DecimalMin("30")
-   @DecimalMax("96")
-   private BigDecimal longitude;
-
+  @DecimalMin("30")
+  @DecimalMax("96")
+  private BigDecimal longitude;
 }
