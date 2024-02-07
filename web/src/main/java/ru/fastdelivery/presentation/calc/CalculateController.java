@@ -8,6 +8,7 @@ import io.swagger.v3.oas.annotations.responses.ApiResponse;
 import io.swagger.v3.oas.annotations.responses.ApiResponses;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
+import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.util.ArrayList;
 import java.util.List;
@@ -69,13 +70,16 @@ public class CalculateController {
       Weight weight = new Weight(cargoPackage.weight());
       Volume volume =
           new Volume(cargoPackage.length(), cargoPackage.width(), cargoPackage.height());
+      if(cargoPackage.length().add(cargoPackage.height()).add(cargoPackage.width()).compareTo(BigDecimal.valueOf(1500)) > 0)
+      {
+        throw new IllegalArgumentException("Сумма параметров объема не может превышать " + 1500);
+      }
       Pack pack = new Pack(weight, volume, departure, destination);
       packs.add(pack);
     }
     var shipment = new Shipment(packs, currencyFactory.create(request.currencyCode()));
     var minimalPrice = tariffCalculateUseCase.minimalPrice();
-    var totalPrice =
-        tariffCalculateUseCase
+    var totalPrice = tariffCalculateUseCase
             .calc(shipment)
             .amount()
             .add(tariffCalculateUseCaseVolume.calc(shipment).amount())
@@ -90,7 +94,6 @@ public class CalculateController {
         objectMapper.writeValueAsString(
             new CalculatePackagesResponse(
                 calculatedPriceResponse, minimalPrice, departure, destination));
-
     return ResponseEntity.ok().headers(headers).body(responseBody);
   }
 }

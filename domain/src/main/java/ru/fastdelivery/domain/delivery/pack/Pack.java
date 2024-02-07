@@ -26,6 +26,10 @@ public record Pack(Weight weight, Volume volume, Departure departure, Destinatio
     if (weight.greaterThan(maxWeight)) {
       throw new IllegalArgumentException("Package can't be more than " + maxWeight);
     }
+    if(volume.length().add(volume.height()).add(volume.width()).compareTo(BigDecimal.valueOf(max)) > 0)
+    {
+      throw new IllegalArgumentException("Сумма параметров объема не может превышать " + maxVolume);
+    }
     if (volume.greaterThan(maxVolume) || volume.compareTo(maxVolume) > 0) {
       throw new IllegalArgumentException("Package volume cannot exceed " + max);
     }
