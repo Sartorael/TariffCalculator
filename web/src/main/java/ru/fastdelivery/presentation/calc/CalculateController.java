@@ -10,8 +10,8 @@ import io.swagger.v3.oas.annotations.tags.Tag;
 import jakarta.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
-import java.util.ArrayList;
 import java.util.List;
+import java.util.stream.Collectors;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.MediaType;
@@ -29,11 +29,12 @@ import ru.fastdelivery.domain.common.weight.Weight;
 import ru.fastdelivery.domain.delivery.pack.Pack;
 import ru.fastdelivery.domain.delivery.shipment.Shipment;
 import ru.fastdelivery.presentation.api.request.CalculatePackagesRequest;
-import ru.fastdelivery.presentation.api.request.CargoPackage;
 import ru.fastdelivery.presentation.api.response.CalculatePackagesResponse;
 import ru.fastdelivery.usecase.TariffCalculateUseCase;
 import ru.fastdelivery.usecase.TariffCalculateUseCaseLocation;
 import ru.fastdelivery.usecase.TariffCalculateUseCaseVolume;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 
 @RestController
 @RequestMapping("/api/v1/calculate/")
@@ -44,6 +45,7 @@ public class CalculateController {
   private final CurrencyFactory currencyFactory;
   private final TariffCalculateUseCaseVolume tariffCalculateUseCaseVolume;
   private final TariffCalculateUseCaseLocation tariffCalculateUseCaseLocation;
+  private static final Logger logger = LoggerFactory.getLogger(CalculateController.class);
 
   @PostMapping
   @Operation(summary = "Расчет стоимости по упаковкам груза")
@@ -55,32 +57,41 @@ public class CalculateController {
   public ResponseEntity<String> calculate(@Valid @RequestBody CalculatePackagesRequest request)
       throws JsonProcessingException {
     if (request.packages() == null) {
+      logger.error("Invalid request: packages are null");
       return ResponseEntity.badRequest().build();
     }
-    List<Pack> packs = new ArrayList<>();
-    Departure departure =
+    var departure =
         new Departure(
             tariffCalculateUseCaseLocation.getDepartureLatitude(),
             tariffCalculateUseCaseLocation.getDepartureLongitude());
-    Destination destination =
+    var destination =
         new Destination(
             tariffCalculateUseCaseLocation.getDestinationLatitude(),
             tariffCalculateUseCaseLocation.getDestinationLongitude());
-    for (CargoPackage cargoPackage : request.packages()) {
-      Weight weight = new Weight(cargoPackage.weight());
-      Volume volume =
-          new Volume(cargoPackage.length(), cargoPackage.width(), cargoPackage.height());
-      if (cargoPackage
-              .length()
-              .add(cargoPackage.height())
-              .add(cargoPackage.width())
-              .compareTo(BigDecimal.valueOf(1500))
-          > 0) {
-        throw new IllegalArgumentException("Сумма параметров объема не может превышать " + 1500);
-      }
-      Pack pack = new Pack(weight, volume, departure, destination);
-      packs.add(pack);
-    }
+    List<Pack> packs =
+        request.packages().stream()
+            .map(
+                cargoPackage ->
+                    new Pack(
+                        new Weight(cargoPackage.weight()),
+                        new Volume(
+                            cargoPackage.length(), cargoPackage.width(), cargoPackage.height()),
+                        departure,
+                        destination))
+            .peek(
+                pack -> {
+                  if (pack.volume()
+                          .length()
+                          .add(pack.volume().height())
+                          .add(pack.volume().width())
+                          .compareTo(BigDecimal.valueOf(1500))
+                      > 0) {
+                    logger.error("Сумма параметров более 1500");
+                    throw new IllegalArgumentException(
+                        "Сумма параметров объема не может превышать " + 1500);
+                  }
+                })
+            .collect(Collectors.toList());
     var shipment = new Shipment(packs, currencyFactory.create(request.currencyCode()));
     var minimalPrice = tariffCalculateUseCase.minimalPrice();
     var totalPrice =
@@ -90,12 +101,11 @@ public class CalculateController {
             .add(tariffCalculateUseCaseVolume.calc(shipment).amount())
             .add(tariffCalculateUseCaseLocation.calc(shipment).amount());
     totalPrice = totalPrice.setScale(2, RoundingMode.CEILING);
-    ObjectMapper objectMapper = new ObjectMapper();
-    objectMapper.enable(SerializationFeature.INDENT_OUTPUT);
-    HttpHeaders headers = new HttpHeaders();
+    var objectMapper = new ObjectMapper().enable(SerializationFeature.INDENT_OUTPUT);
+    var headers = new HttpHeaders();
     headers.setContentType(MediaType.APPLICATION_JSON);
     var calculatedPriceResponse = new Price(totalPrice, minimalPrice.currency());
-    String responseBody =
+    var responseBody =
         objectMapper.writeValueAsString(
             new CalculatePackagesResponse(
                 calculatedPriceResponse, minimalPrice, departure, destination));
