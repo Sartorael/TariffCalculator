@@ -48,6 +48,7 @@
                 <configuration>
                     <configLocation>checkstyle.xml</configLocation>
                 </configuration>
+
                 <executions>
                     <execution>
                         <goals>

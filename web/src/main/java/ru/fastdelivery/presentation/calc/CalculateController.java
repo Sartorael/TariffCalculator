@@ -70,8 +70,12 @@ public class CalculateController {
       Weight weight = new Weight(cargoPackage.weight());
       Volume volume =
           new Volume(cargoPackage.length(), cargoPackage.width(), cargoPackage.height());
-      if(cargoPackage.length().add(cargoPackage.height()).add(cargoPackage.width()).compareTo(BigDecimal.valueOf(1500)) > 0)
-      {
+      if (cargoPackage
+              .length()
+              .add(cargoPackage.height())
+              .add(cargoPackage.width())
+              .compareTo(BigDecimal.valueOf(1500))
+          > 0) {
         throw new IllegalArgumentException("Сумма параметров объема не может превышать " + 1500);
       }
       Pack pack = new Pack(weight, volume, departure, destination);
@@ -79,7 +83,8 @@ public class CalculateController {
     }
     var shipment = new Shipment(packs, currencyFactory.create(request.currencyCode()));
     var minimalPrice = tariffCalculateUseCase.minimalPrice();
-    var totalPrice = tariffCalculateUseCase
+    var totalPrice =
+        tariffCalculateUseCase
             .calc(shipment)
             .amount()
             .add(tariffCalculateUseCaseVolume.calc(shipment).amount())
