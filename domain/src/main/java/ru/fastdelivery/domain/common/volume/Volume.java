@@ -17,6 +17,9 @@ public record Volume(BigDecimal length, BigDecimal width, BigDecimal height)
     int zero = 0;
     int maxVolume = 1500;
     int scale = 50;
+    BigDecimal firstLength = length;
+    BigDecimal firstWidth = width;
+    BigDecimal firstHeight = height;
 
     if (length.compareTo(BigDecimal.ZERO) < zero
         || width.compareTo(BigDecimal.ZERO) < zero
@@ -40,7 +43,7 @@ public record Volume(BigDecimal length, BigDecimal width, BigDecimal height)
             .divide(BigDecimal.valueOf(scale), zero, RoundingMode.HALF_UP)
             .multiply(BigDecimal.valueOf(scale));
 
-    BigDecimal sum = length.add(width).add(height);
+    BigDecimal sum = firstLength.add(firstWidth).add(firstHeight);
     if (sum.compareTo(BigDecimal.valueOf(maxVolume)) > zero) {
       throw new IllegalArgumentException("Sum of parameters must not exceed " + maxVolume + "!");
     }
